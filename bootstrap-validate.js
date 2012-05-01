@@ -123,11 +123,25 @@ function AllValidData(frmVal){
 	var strError = "";
 	_genMsg.html("&nbsp;");
 	for (var i = 0; i < document.forms[frmVal].elements.length; i++){
-		var swCase = _currentFormElement.getAttribute("valdata");
 		var iEle = document.forms[frmVal].elements[i];
 		var currentElement = $(iEle);
+		var swCase = currentElement.attr("valdata");
+		var minLen = currentElement.attr("minlen");
+		var _controlDiv = currentElement.parent().parent(); //cache for Control Div
 		_controlDiv.removeClass('error');
-
+		
+		if(!isNaN(minLen)){
+			if(iEle.value.length < minLen){
+				if(!strError || strError.length ==0) { 
+					strError = "Field should have atleast "+minLen+" charactors"; 
+				}               
+				_genMsg.html(strError); 
+				_controlDiv.addClass('error');
+				_genMsg.fadeIn();
+				iEle.focus();
+				return false; 
+			}
+		}
 		if(swCase!=null && !iEle.disabled && iEle!=null){
 			switch(swCase){ 
 				case "alnum": 
